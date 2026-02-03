@@ -1,0 +1,791 @@
+<!--
+  NEUROSTARS - Widget-Optimized HTML for Go High Level / WordPress
+  
+  IMPORTANT: This is a SELF-CONTAINED widget. All styles are inline.
+  Copy and paste this entire code into your HTML widget.
+  
+  For image paths: Replace local image paths with your CDN/hosted image URLs.
+-->
+
+<style>
+    /* Reset & Base - Scoped to widget */
+    .neurostars-widget * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .neurostars-widget {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #374151;
+        background-color: #fffbf5;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .neurostars-widget img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .neurostars-widget a {
+        color: #8b5cf6;
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+    .neurostars-widget a:hover {
+        color: #a78bfa;
+    }
+
+    /* Container */
+    .ns-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+    }
+
+    .ns-section {
+        padding: 3rem 0;
+    }
+
+    .ns-text-center {
+        text-align: center;
+    }
+
+    /* Typography */
+    .neurostars-widget h1,
+    .neurostars-widget h2,
+    .neurostars-widget h3 {
+        font-family: 'Outfit', 'Inter', sans-serif;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #5b21b6;
+    }
+
+    .neurostars-widget h1 {
+        font-size: 1.875rem;
+        font-weight: 800;
+    }
+
+    .neurostars-widget h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .neurostars-widget h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .ns-subtitle {
+        font-size: 1.125rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto 1.5rem;
+    }
+
+    /* Hero Section */
+    .ns-hero {
+        background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 50%, #c084fc 100%);
+        color: white;
+        padding: 4rem 0 3rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ns-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .ns-hero h1 {
+        color: white;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .ns-hero .ns-tagline {
+        font-size: 1.5rem;
+        opacity: 0.95;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .ns-hero p {
+        font-size: 1.125rem;
+        max-width: 700px;
+        margin: 0 auto;
+        opacity: 0.9;
+        line-height: 1.8;
+        position: relative;
+    }
+
+    /* Products Grid */
+    .ns-products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Product Card */
+    .ns-product-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ns-product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .ns-product-card__image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .ns-product-card__header {
+        padding: 1rem;
+        color: white;
+        text-align: center;
+    }
+
+    .ns-product-card__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+        color: white;
+    }
+
+    .ns-product-card__subtitle {
+        font-size: 0.875rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+
+    .ns-product-card__body {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ns-product-card__description {
+        font-size: 1rem;
+        color: #6b7280;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+        flex: 1;
+    }
+
+    .ns-product-card__features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .ns-product-card__feature {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        background: #fef7ed;
+        border-radius: 9999px;
+        color: #6b7280;
+    }
+
+    .ns-product-card__cta {
+        display: block;
+        text-align: center;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    /* Product Card Color Variants */
+    .ns-product-card--megakit .ns-product-card__header {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    }
+
+    .ns-product-card--megakit .ns-product-card__cta {
+        background: #6366f1;
+        color: white;
+    }
+
+    .ns-product-card--megakit .ns-product-card__cta:hover {
+        background: #4f46e5;
+    }
+
+    .ns-product-card--ondazen .ns-product-card__header {
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    }
+
+    .ns-product-card--ondazen .ns-product-card__cta {
+        background: #14b8a6;
+        color: white;
+    }
+
+    .ns-product-card--ondazen .ns-product-card__cta:hover {
+        background: #0d9488;
+    }
+
+    .ns-product-card--planes .ns-product-card__header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    }
+
+    .ns-product-card--planes .ns-product-card__cta {
+        background: #8b5cf6;
+        color: white;
+    }
+
+    .ns-product-card--planes .ns-product-card__cta:hover {
+        background: #7c3aed;
+    }
+
+    .ns-product-card--social .ns-product-card__header {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .ns-product-card--social .ns-product-card__cta {
+        background: #f59e0b;
+        color: white;
+    }
+
+    .ns-product-card--social .ns-product-card__cta:hover {
+        background: #d97706;
+    }
+
+    .ns-product-card--capaz .ns-product-card__header {
+        background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    }
+
+    .ns-product-card--capaz .ns-product-card__cta {
+        background: #ec4899;
+        color: white;
+    }
+
+    .ns-product-card--capaz .ns-product-card__cta:hover {
+        background: #db2777;
+    }
+
+    .ns-product-card--enojo .ns-product-card__header {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    .ns-product-card--enojo .ns-product-card__cta {
+        background: #ef4444;
+        color: white;
+    }
+
+    .ns-product-card--enojo .ns-product-card__cta:hover {
+        background: #dc2626;
+    }
+
+    /* Why Section */
+    .ns-why-section {
+        background: #fef7ed;
+    }
+
+    .ns-why-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem auto;
+    }
+
+    .ns-why-card {
+        text-align: center;
+    }
+
+    .ns-why-card__icon {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .ns-why-card h3 {
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ns-why-card p {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin: 0;
+    }
+
+    /* CTA Box */
+    .ns-cta-box {
+        margin-top: 2.5rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%);
+        border-radius: 1rem;
+        color: white;
+        text-align: center;
+    }
+
+    .ns-cta-box p {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    /* CTA Section */
+    .ns-cta-section {
+        background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .ns-cta-section h2 {
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .ns-cta-section p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+        margin-bottom: 1.5rem;
+    }
+
+    .ns-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1.25rem 2rem;
+        font-family: 'Outfit', 'Inter', sans-serif;
+        font-size: 1.125rem;
+        font-weight: 600;
+        border-radius: 0.75rem;
+        transition: all 0.2s ease;
+        text-align: center;
+        min-height: 60px;
+        text-decoration: none;
+    }
+
+    .ns-btn--white {
+        background: white;
+        color: #5b21b6;
+    }
+
+    .ns-btn--white:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        color: #5b21b6;
+    }
+
+    /* Footer */
+    .ns-footer {
+        background: #1f2937;
+        color: #9ca3af;
+        padding: 3rem 0 1.5rem;
+    }
+
+    .ns-footer__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .ns-footer__brand {
+        max-width: 280px;
+    }
+
+    .ns-footer .ns-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Outfit', 'Inter', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .ns-footer .ns-logo__icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .ns-footer__section h4 {
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .ns-footer__links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .ns-footer__link {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        transition: color 0.15s ease;
+    }
+
+    .ns-footer__link:hover {
+        color: white;
+    }
+
+    .ns-footer__contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ns-footer__bottom {
+        border-top: 1px solid #374151;
+        padding-top: 1.5rem;
+        text-align: center;
+    }
+
+    .ns-footer__legal,
+    .ns-footer__copy {
+        font-size: 0.75rem;
+        margin: 0.25rem 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .ns-hero h1 {
+            font-size: 1.875rem;
+        }
+
+        .ns-hero .ns-tagline {
+            font-size: 1.25rem;
+        }
+
+        .ns-products-grid {
+            grid-template-columns: 1fr;
+            padding: 0 1rem;
+        }
+
+        .ns-why-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Google Fonts - Add this to your page head for best typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+<div class="neurostars-widget">
+    <!-- Hero Section -->
+    <section class="ns-hero">
+        <div class="ns-container">
+            <h1>NEUROSTARS</h1>
+            <p class="ns-tagline">✨ Neurociencia aplicable para familias reales</p>
+            <p>
+                Productos digitales diseñados por profesionales en neurociencia, psicología y desarrollo infantil
+                para ayudarte a entender y acompañar mejor a tus hijos.
+            </p>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="ns-section">
+        <div class="ns-container">
+            <h2 class="ns-text-center">Nuestros Productos</h2>
+            <p class="ns-subtitle ns-text-center">Elige el que mejor se adapte a las necesidades de tu familia</p>
+
+            <div class="ns-products-grid">
+                <!-- Product 1: MEGA Kit NEUROSTARS -->
+                <div class="ns-product-card ns-product-card--megakit">
+                    <!-- 
+            IMPORTANT: Replace this src with your hosted image URL
+            Example: src="https://your-cdn.com/images/product-mega-kit.png"
+          -->
+                    <img src="images/product-mega-kit.png" alt="MEGA Kit NEUROSTARS" class="ns-product-card__image">
+                    <div class="ns-product-card__header">
+                        <h3 class="ns-product-card__title">🧠 MEGA Kit NEUROSTARS</h3>
+                        <p class="ns-product-card__subtitle">Potencia el TDAH en niños y adolescentes</p>
+                    </div>
+                    <div class="ns-product-card__body">
+                        <p class="ns-product-card__description">
+                            Un kit completo con estrategias, herramientas visuales y guías prácticas para entender
+                            el cerebro con TDAH y convertir los desafíos en fortalezas.
+                        </p>
+                        <div class="ns-product-card__features">
+                            <span class="ns-product-card__feature">📚 Guías completas</span>
+                            <span class="ns-product-card__feature">🎯 Estrategias probadas</span>
+                            <span class="ns-product-card__feature">🖨️ Imprimibles</span>
+                        </div>
+                        <a href="https://your-domain.com/mega-kit" class="ns-product-card__cta">Ver más →</a>
+                    </div>
+                </div>
+
+                <!-- Product 2: La Onda Zen -->
+                <div class="ns-product-card ns-product-card--ondazen">
+                    <img src="images/product-onda-zen.png" alt="La Onda Zen" class="ns-product-card__image">
+                    <div class="ns-product-card__header">
+                        <h3 class="ns-product-card__title">🎧 La Onda Zen</h3>
+                        <p class="ns-product-card__subtitle">Método neuroacústico japonés</p>
+                    </div>
+                    <div class="ns-product-card__body">
+                        <p class="ns-product-card__description">
+                            Reduce la ansiedad infantil con sonidos especialmente diseñados basados en técnicas
+                            neuroacústicas japonesas. Calma que funciona.
+                        </p>
+                        <div class="ns-product-card__features">
+                            <span class="ns-product-card__feature">🎵 Audio terapéutico</span>
+                            <span class="ns-product-card__feature">😌 Reduce ansiedad</span>
+                            <span class="ns-product-card__feature">🌙 Ideal para dormir</span>
+                        </div>
+                        <a href="https://your-domain.com/onda-zen" class="ns-product-card__cta">Ver más →</a>
+                    </div>
+                </div>
+
+                <!-- Product 3: Planes de Claridad -->
+                <div class="ns-product-card ns-product-card--planes">
+                    <img src="images/product-planes.png" alt="Planes de Claridad" class="ns-product-card__image">
+                    <div class="ns-product-card__header">
+                        <h3 class="ns-product-card__title">📋 Planes de Claridad</h3>
+                        <p class="ns-product-card__subtitle">Guías semanales para familias</p>
+                    </div>
+                    <div class="ns-product-card__body">
+                        <p class="ns-product-card__description">
+                            Cada semana recibes un plan simple y accionable con estrategias de neurociencia
+                            para manejar los desafíos diarios de la crianza. Membresía mensual.
+                        </p>
+                        <div class="ns-product-card__features">
+                            <span class="ns-product-card__feature">📧 Semanal por email</span>
+                            <span class="ns-product-card__feature">🎯 Accionable</span>
+                            <span class="ns-product-card__feature">💰 USD 5/mes</span>
+                        </div>
+                        <a href="https://your-domain.com/planes-claridad" class="ns-product-card__cta">Ver más →</a>
+                    </div>
+                </div>
+
+                <!-- Product 4: Socialmente Inteligente -->
+                <div class="ns-product-card ns-product-card--social">
+                    <img src="images/product-social.png" alt="Socialmente Inteligente" class="ns-product-card__image">
+                    <div class="ns-product-card__header">
+                        <h3 class="ns-product-card__title">🤝 Socialmente Inteligente</h3>
+                        <p class="ns-product-card__subtitle">Habilidades sociales para niños</p>
+                    </div>
+                    <div class="ns-product-card__body">
+                        <p class="ns-product-card__description">
+                            Ayuda a tu hijo a mejorar su conciencia social, entender los pensamientos de los demás,
+                            reconocer cómo lo perciben y mantener amistades a lo largo del tiempo.
+                        </p>
+                        <div class="ns-product-card__features">
+                            <span class="ns-product-card__feature">👥 Conexión social</span>
+                            <span class="ns-product-card__feature">🧩 Toma de perspectiva</span>
+                            <span class="ns-product-card__feature">💬 Amistades duraderas</span>
+                        </div>
+                        <a href="https://your-domain.com/socialmente-inteligente" class="ns-product-card__cta">Ver más
+                            →</a>
+                    </div>
+                </div>
+
+                <!-- Product 5: Capaz y Seguro -->
+                <div class="ns-product-card ns-product-card--capaz">
+                    <img src="images/product-capaz.png" alt="Capaz y Seguro" class="ns-product-card__image">
+                    <div class="ns-product-card__header">
+                        <h3 class="ns-product-card__title">💪 Capaz y Seguro</h3>
+                        <p class="ns-product-card__subtitle">Entrenamiento para padres (4-7 años)</p>
+                    </div>
+                    <div class="ns-product-card__body">
+                        <p class="ns-product-card__description">
+                            Entrenamiento conductual para padres basado en las recomendaciones de la Academia
+                            Americana de Pediatría. Maneja rutinas, transiciones, berrinches y conductas difíciles.
+                        </p>
+                        <div class="ns-product-card__features">
+                            <span class="ns-product-card__feature">👶 Edades 4-7</span>
+                            <span class="ns-product-card__feature">🏠 Hogar más calmado</span>
+                            <span class="ns-product-card__feature">✅ Basado en AAP</span>
+                        </div>
+                        <a href="https://your-domain.com/capaz-seguro" class="ns-product-card__cta">Ver más →</a>
+                    </div>
+                </div>
+
+                <!-- Product 6: Aventuras para Manejar el Enojo -->
+                <div class="ns-product-card ns-product-card--enojo">
+                    <img src="images/product-enojo.png" alt="Aventuras para Manejar el Enojo"
+                        class="ns-product-card__image">
+                    <div class="ns-product-card__header">
+                        <h3 class="ns-product-card__title">🔥 Aventuras para Manejar el Enojo</h3>
+                        <p class="ns-product-card__subtitle">Kit de regulación emocional (Método PER)</p>
+                    </div>
+                    <div class="ns-product-card__body">
+                        <p class="ns-product-card__description">
+                            Kit de actividades basado en el revolucionario Método PER (Regulación Emocional a través
+                            del Juego). Ayuda a los niños a entender y regular su enojo de forma divertida y efectiva.
+                        </p>
+                        <div class="ns-product-card__features">
+                            <span class="ns-product-card__feature">🎮 Basado en juego</span>
+                            <span class="ns-product-card__feature">😤 Control del enojo</span>
+                            <span class="ns-product-card__feature">🎯 Método PER</span>
+                        </div>
+                        <a href="https://your-domain.com/aventuras-enojo" class="ns-product-card__cta">Ver más →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Section -->
+    <section class="ns-section ns-why-section">
+        <div class="ns-container" style="max-width: 800px; text-align: center;">
+            <h2>¿Por qué elegir NEUROSTARS?</h2>
+            <p class="ns-subtitle" style="font-size: 1.25rem; color: #374151;">
+                Porque no estás sola. Y porque mereces herramientas que <strong>realmente funcionen</strong>.
+            </p>
+
+            <div style="margin: 2.5rem auto; text-align: center;">
+                <p style="font-size: 1.5rem; font-weight: 700; color: #5b21b6; margin-bottom: 1.5rem;">
+                    💜 Sabemos lo que se siente.
+                </p>
+                <p style="font-size: 1.125rem; line-height: 1.9; margin-bottom: 1rem;">
+                    Amar profundamente a tu hijo y aún así terminar el día sintiéndote agotada,<br>
+                    culpable, preguntándote si estás haciendo algo mal.
+                </p>
+                <p style="font-size: 1.125rem; line-height: 1.9; margin-bottom: 1.5rem;">
+                    Hemos estado ahí. <strong>Por eso creamos NEUROSTARS.</strong>
+                </p>
+            </div>
+
+            <div class="ns-why-grid">
+                <div class="ns-why-card">
+                    <span class="ns-why-card__icon">🧬</span>
+                    <h3>Ciencia Real</h3>
+                    <p>No teorías. Neurociencia aplicable que funciona.</p>
+                </div>
+                <div class="ns-why-card">
+                    <span class="ns-why-card__icon">⚡</span>
+                    <h3>Resultados Rápidos</h3>
+                    <p>Herramientas para usar hoy, no el próximo año.</p>
+                </div>
+                <div class="ns-why-card">
+                    <span class="ns-why-card__icon">🤍</span>
+                    <h3>Sin Juicio</h3>
+                    <p>Entendemos tus días difíciles. Sin culpa, solo apoyo.</p>
+                </div>
+            </div>
+
+            <div class="ns-cta-box">
+                <p>
+                    ✨ Criar no tiene que ser sobrevivir.<br>
+                    <span style="font-weight: 400; opacity: 0.95;">Puede ser conectar, crecer y disfrutar el
+                        camino.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="ns-section ns-cta-section">
+        <div class="ns-container">
+            <h2>¿Lista para empezar?</h2>
+            <p>Explora nuestros productos y encuentra el que mejor se ajuste a tu familia.</p>
+            <a href="#" class="ns-btn ns-btn--white"
+                onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+                Ver todos los productos ↑
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="ns-footer">
+        <div class="ns-container">
+            <div class="ns-footer__grid">
+                <div class="ns-footer__brand">
+                    <div class="ns-logo">
+                        <svg class="ns-logo__icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="18" cy="18" r="18" fill="url(#logo-gradient-widget)" />
+                            <path d="M18 8L22 14L28 15L23.5 20L24.5 26L18 23L11.5 26L12.5 20L8 15L14 14L18 8Z"
+                                fill="white" />
+                            <defs>
+                                <linearGradient id="logo-gradient-widget" x1="0" y1="0" x2="36" y2="36"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#8b5cf6" />
+                                    <stop offset="1" stop-color="#5b21b6" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        NEUROSTARS
+                    </div>
+                    <p>Productos digitales de neurociencia para familias que quieren acompañar mejor a sus hijos.</p>
+                </div>
+
+                <div class="ns-footer__section">
+                    <h4>Productos</h4>
+                    <div class="ns-footer__links">
+                        <a href="https://your-domain.com/mega-kit" class="ns-footer__link">MEGA Kit NEUROSTARS</a>
+                        <a href="https://your-domain.com/onda-zen" class="ns-footer__link">La Onda Zen</a>
+                        <a href="https://your-domain.com/planes-claridad" class="ns-footer__link">Planes de Claridad</a>
+                        <a href="https://your-domain.com/socialmente-inteligente" class="ns-footer__link">Socialmente
+                            Inteligente</a>
+                        <a href="https://your-domain.com/capaz-seguro" class="ns-footer__link">Capaz y Seguro</a>
+                        <a href="https://your-domain.com/aventuras-enojo" class="ns-footer__link">Aventuras para Manejar
+                            el Enojo</a>
+                    </div>
+                </div>
+
+                <div class="ns-footer__section">
+                    <h4>Legal</h4>
+                    <div class="ns-footer__links">
+                        <a href="https://your-domain.com/privacidad" class="ns-footer__link">Política de Privacidad</a>
+                        <a href="https://your-domain.com/terminos" class="ns-footer__link">Términos y Condiciones</a>
+                        <a href="https://your-domain.com/reembolsos" class="ns-footer__link">Cancelaciones</a>
+                        <a href="https://your-domain.com/cookies" class="ns-footer__link">Política de Cookies</a>
+                    </div>
+                </div>
+
+                <div class="ns-footer__section">
+                    <h4>Contacto</h4>
+                    <div class="ns-footer__contact-item">
+                        <span>📧</span>
+                        <span>soporte@neurostars.net</span>
+                    </div>
+                    <div class="ns-footer__contact-item">
+                        <span>⏰</span>
+                        <span>Respuesta: 24-48h</span>
+                    </div>
+                    <a href="https://your-domain.com/contacto" class="ns-footer__link"
+                        style="margin-top: 0.5rem; display: inline-block;">
+                        Formulario de contacto →
+                    </a>
+                </div>
+            </div>
+
+            <div class="ns-footer__bottom">
+                <p class="ns-footer__legal">NeuroStars.net Opera como parte de nomada-ventures.com comprometidos con
+                    programas educativos de calidad</p>
+                <p class="ns-footer__copy">© 2026 NEUROSTARS. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</div>
