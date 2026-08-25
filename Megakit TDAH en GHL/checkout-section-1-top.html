@@ -345,11 +345,21 @@
   var CVC = /(codigo de seguridad|código de seguridad|security code|cvc|cvv)/i;
   var DECLINE = /(incorrect|invalid|no coincide|incorrecto|inv[aá]lido|rechaz|declin|failed|error)/i;
 
-  function show() {
+  function show(errNode) {
     var now = Date.now();
     if (now - lastShown < 1200) return;      // one trigger per attempt
     lastShown = now;
     hits++;
+    // Move the panel to sit right under the error. Section 1 lives ABOVE the payment
+    // form, but Stripe/GHL print the decline BELOW it, next to the buy button — on a
+    // phone the buyer never scrolls back up, so a panel left at the top is invisible.
+    // Re-homing it next to the error is what makes this actually get read.
+    try {
+      var host = errNode && errNode.closest ? (errNode.closest('div,section,form') || errNode) : null;
+      if (host && host.parentNode && panel.parentNode !== host.parentNode) {
+        host.parentNode.insertBefore(panel, host.nextSibling);
+      }
+    } catch (e) {}
     panel.style.display = 'block';
     if (hits >= 2) alt.style.display = 'block';   // 2nd failure → send them to another card
     try { panel.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
@@ -357,7 +367,7 @@
   function scan(node) {
     if (!node) return;
     var t = (node.innerText || node.textContent || '').slice(0, 400);
-    if (t && t.length < 400 && CVC.test(t) && DECLINE.test(t)) show();
+    if (t && t.length < 400 && CVC.test(t) && DECLINE.test(t)) show(node);
   }
   new MutationObserver(function (muts) {
     for (var i = 0; i < muts.length; i++) {
