@@ -1,0 +1,376 @@
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  NEUROSTARS MEGAKIT CHECKOUT — SECTION 1 (TOP)              ║
+  ║  Paste this as an HTML element in GHL ABOVE the             ║
+  ║  native payment form.                                       ║
+  ║                                                             ║
+  ║  ⚠️  BODY COLOR NOTE:                                        ║
+  ║  body color is set to #111 (dark) so the GHL light-theme    ║
+  ║  payment form gets readable text. Our ns- elements each     ║
+  ║  have their own explicit color so they are unaffected.      ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── DESIGN TOKENS ── */
+  :root {
+    --bg:        #080f1a;
+    --bg-card:   #0d1c2e;
+    --border:    rgba(255,255,255,0.07);
+    --accent:    #6D37EB;
+    --accent-dk: #3B06BD;
+    --white:     #f0f6fc;
+    --muted:     #7a9ab8;
+    --dimmed:    #3d5a74;
+    --radius:    12px;
+    --max:       600px;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    /*
+      NO color set here intentionally.
+      Our #ns-* elements all have explicit colors, so they render
+      correctly regardless. GHL's native form and order bumps will
+      use GHL's own stylesheet colors — zero interference from us.
+    */
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── URGENCY BAR ── */
+  #ns-urgency-bar {
+    background: linear-gradient(90deg, #3B06BD 0%, #6D37EB 45%, #7B45F0 55%, #3B06BD 100%);
+    color: #fff;
+    text-align: center;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    border-bottom: 1px solid rgba(180,130,255,0.35);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  #ns-urgency-bar span { color: #ffe082; }
+
+  /* ── HERO BANNER ── */
+  #ns-hero {
+    background: #000;
+    line-height: 0;
+    display: block;
+  }
+  #ns-hero img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ── HEADLINE ── */
+  #ns-headline {
+    background: linear-gradient(180deg, #0a1929 0%, var(--bg) 100%);
+    padding: 28px 16px 24px;
+    text-align: center;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  /* MOBILE-FIRST (this funnel is mobile only) — headline sized to ~3 lines max */
+  #ns-headline h1 {
+    font-size: clamp(21px, 5.6vw, 27px);
+    font-weight: 900;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    max-width: 360px;
+    margin: 0 auto 12px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.55);
+  }
+  /* Highlighted dream-outcome phrase — brighter text + a marker under the lower third
+     (not a full block, so it reads as a highlight rather than engulfing the words) */
+  #ns-headline h1 em {
+    font-style: normal;
+    color: #e9ddff;
+    background: linear-gradient(180deg, transparent 62%, rgba(109,55,235,0.5) 62%);
+    padding: 0 2px;
+    border-radius: 2px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    text-shadow: 0 1px 8px rgba(109,55,235,0.45), 0 1px 2px rgba(0,0,0,0.5);
+  }
+  /* Subtitle — visible but clearly secondary to the headline */
+  #ns-headline p {
+    font-size: 15.5px;
+    font-weight: 500;
+    color: #a9c4dd;
+    max-width: 380px;
+    margin: 10px auto 0;
+    line-height: 1.5;
+  }
+
+  /* ── COUNTDOWN TIMER ── */
+  #ns-timer-section { padding: 0 16px 20px; }
+
+  #ns-timer-box {
+    max-width: var(--max);
+    margin: 0 auto;
+    background: linear-gradient(135deg, #1a0a00 0%, #251200 50%, #1a0a00 100%);
+    border: 1px solid rgba(255,160,0,0.5);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    box-shadow:
+      0 0 0 1px rgba(255,160,0,0.2),
+      0 4px 30px rgba(255,100,0,0.25),
+      inset 0 1px 0 rgba(255,200,0,0.1);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  #ns-timer-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,180,0,0.06), transparent);
+    animation: nsTimerSweep 3s ease-in-out infinite;
+  }
+  @keyframes nsTimerSweep {
+    0%   { left: -60%; }
+    100% { left: 140%; }
+  }
+
+  #ns-timer-label {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #ffb300;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  #ns-timer-digits {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ns-t-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ns-t-num {
+    background: linear-gradient(180deg, #1e0f00 0%, #0d0800 100%);
+    border: 1px solid rgba(255,160,0,0.5);
+    border-radius: 8px;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    color: #ffcc00;
+    box-shadow:
+      0 0 12px rgba(255,160,0,0.3),
+      inset 0 1px 0 rgba(255,220,0,0.15);
+    animation: nsNumPulse 1s ease-in-out infinite;
+  }
+  @keyframes nsNumPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(255,160,0,0.3), inset 0 1px 0 rgba(255,220,0,0.15); }
+    50%       { box-shadow: 0 0 22px rgba(255,160,0,0.55), inset 0 1px 0 rgba(255,220,0,0.2); }
+  }
+
+  .ns-t-lbl {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,179,0,0.6);
+  }
+
+  .ns-t-sep {
+    font-size: 30px;
+    font-weight: 900;
+    color: #ffb300;
+    padding-bottom: 16px;
+    animation: nsSepBlink 1s step-end infinite;
+  }
+  @keyframes nsSepBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 400px) {
+    #ns-urgency-bar { font-size: 12px; }
+    #ns-headline h1 { font-size: 20px; }
+    #ns-headline p { font-size: 14.5px; }
+    .ns-t-num { font-size: 26px; width: 50px; height: 50px; }
+    .ns-t-sep { font-size: 26px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; }
+  }
+</style>
+
+<!-- URGENCY BAR -->
+<div id="ns-urgency-bar">
+  ⚠️ Solo quedan <span id="ns-spots-txt">7 cupos</span> a este precio — Después sube a $97
+</div>
+
+<!-- HERO BANNER -->
+<div id="ns-hero">
+  <img
+    src="https://raw.githubusercontent.com/sparda2/neurostars-images/main/banner-megakit-neurostars.webp"
+    alt="MEGAKIT NEUROSTARS – Potencia el TDAH de tu hijo"
+    width="800"
+    height="451"
+    loading="eager"
+    fetchpriority="high"
+  >
+</div>
+
+<!-- HEADLINE -->
+<div id="ns-headline">
+  <h1>Estás a un paso de un niño <em>más enfocado, con mejores notas y confianza.</em></h1>
+  <p>Completa tu pedido hoy y empieza esta misma semana — el precio especial desaparece cuando se agoten los cupos.</p>
+</div>
+
+<!-- COUNTDOWN TIMER -->
+<div id="ns-timer-section">
+  <div id="ns-timer-box">
+    <div id="ns-timer-label">🔥 ESTA OFERTA<br>EXPIRA EN</div>
+    <div id="ns-timer-digits">
+      <div class="ns-t-unit">
+        <div class="ns-t-num" id="ns-t-min">14</div>
+        <div class="ns-t-lbl">min</div>
+      </div>
+      <div class="ns-t-sep">:</div>
+      <div class="ns-t-unit">
+        <div class="ns-t-num" id="ns-t-sec">59</div>
+        <div class="ns-t-lbl">seg</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CVC RESCUE — 33 declines in 60 days were incorrect_cvc, plus 13
+     card_velocity_exceeded caused by people re-trying until Stripe
+     blocked them. Stripe's own element already blocks a MALFORMED cvc,
+     so these are buyers typing the WRONG number (often the last digits
+     of the card, or the wrong card entirely). Stripe/GHL renders the
+     card fields inside its own iframe, so we cannot validate the input
+     — what we CAN do is catch the error the parent page shows and
+     replace a useless "tu tarjeta fue rechazada" with a clear, visual
+     explanation, then push them to a different card before the issuer
+     velocity-blocks them.
+     ponytail: text-pattern matching on a MutationObserver — no GHL
+     selector to break, no dependency. If GHL changes its error markup
+     the panel simply stops appearing; checkout is unaffected.
+══════════════════════════════════════════════════════════════════ -->
+<div id="ns-cvc-help" role="alert" aria-live="assertive" style="display:none">
+  <div class="ns-cvc-inner">
+    <div class="ns-cvc-title">🔐 Revisa el código de seguridad</div>
+    <p class="ns-cvc-body">
+      El <b>código de seguridad (CVV)</b> no coincide con el de tu tarjeta.
+      No es parte del número de la tarjeta.
+    </p>
+    <div class="ns-cvc-where">
+      <div class="ns-cvc-card">
+        <div class="ns-cvc-stripe"></div>
+        <div class="ns-cvc-digits">123</div>
+      </div>
+      <div class="ns-cvc-note">
+        <b>Visa / Mastercard:</b> son los <b>3 dígitos</b> al <b>reverso</b> de la tarjeta,
+        justo despues de la banda de la firma.<br>
+        <b>American Express:</b> son <b>4 dígitos</b> al <b>frente</b>.
+      </div>
+    </div>
+    <p class="ns-cvc-alt" id="ns-cvc-alt" style="display:none">
+      ⚠️ <b>Ya intentaste varias veces.</b> Por seguridad tu banco puede bloquear mas intentos.
+      Te recomendamos <b>usar otra tarjeta</b> — o intentar de nuevo en unos minutos.
+    </p>
+  </div>
+</div>
+<style>
+  #ns-cvc-help { max-width: var(--max); margin: 14px auto 0; padding: 0 16px; }
+  .ns-cvc-inner { background: #2a1a08; border: 1px solid #d98324; border-left: 4px solid #d98324;
+    border-radius: var(--radius); padding: 14px 16px; }
+  .ns-cvc-title { color: #ffb454; font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+  .ns-cvc-body  { color: #f0d9b5; font-size: 13.5px; line-height: 1.5; margin-bottom: 10px; }
+  .ns-cvc-where { display: flex; gap: 12px; align-items: center; }
+  .ns-cvc-card  { flex: none; width: 74px; height: 46px; border-radius: 6px;
+    background: linear-gradient(135deg,#1e3550,#122234); border: 1px solid rgba(255,255,255,.18); position: relative; }
+  .ns-cvc-stripe { position: absolute; top: 7px; left: 0; right: 0; height: 11px; background: #0a1420; }
+  .ns-cvc-digits { position: absolute; bottom: 8px; right: 6px; background: #f0f6fc; color: #111;
+    font-size: 11px; font-weight: 800; letter-spacing: 1px; padding: 1px 5px; border-radius: 2px; }
+  .ns-cvc-note  { color: #f0d9b5; font-size: 12.5px; line-height: 1.5; }
+  .ns-cvc-alt   { color: #ffd9a0; font-size: 13px; line-height: 1.5; margin-top: 10px;
+    border-top: 1px solid rgba(217,131,36,.4); padding-top: 9px; }
+  @media (max-width: 420px) { .ns-cvc-where { flex-direction: column; align-items: flex-start; } }
+</style>
+<script>
+(function () {
+  var panel = document.getElementById('ns-cvc-help');
+  var alt   = document.getElementById('ns-cvc-alt');
+  if (!panel) return;
+  var hits = 0, lastShown = 0;
+  // Stripe/GHL surface the issuer message in the parent page. Match the CVC wording in
+  // both languages rather than a selector, so GHL markup changes cannot break it.
+  var CVC = /(codigo de seguridad|código de seguridad|security code|cvc|cvv)/i;
+  var DECLINE = /(incorrect|invalid|no coincide|incorrecto|inv[aá]lido|rechaz|declin|failed|error)/i;
+
+  function show() {
+    var now = Date.now();
+    if (now - lastShown < 1200) return;      // one trigger per attempt
+    lastShown = now;
+    hits++;
+    panel.style.display = 'block';
+    if (hits >= 2) alt.style.display = 'block';   // 2nd failure → send them to another card
+    try { panel.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+  }
+  function scan(node) {
+    if (!node) return;
+    var t = (node.innerText || node.textContent || '').slice(0, 400);
+    if (t && t.length < 400 && CVC.test(t) && DECLINE.test(t)) show();
+  }
+  new MutationObserver(function (muts) {
+    for (var i = 0; i < muts.length; i++) {
+      var m = muts[i];
+      for (var j = 0; j < m.addedNodes.length; j++) {
+        var n = m.addedNodes[j];
+        if (n.nodeType === 1) scan(n);
+        else if (n.nodeType === 3 && n.parentElement) scan(n.parentElement);
+      }
+      if (m.type === 'characterData' && m.target.parentElement) scan(m.target.parentElement);
+    }
+  }).observe(document.body, { childList: true, subtree: true, characterData: true });
+})();
+</script>
+
+<!-- ↑↑↑ END OF SECTION 1 — GHL PAYMENT FORM GOES IMMEDIATELY BELOW ↑↑↑ -->
