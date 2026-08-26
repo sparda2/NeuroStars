@@ -295,6 +295,7 @@
 ══════════════════════════════════════════════════════════════════ -->
 <div id="ns-cvc-help" role="alert" aria-live="assertive" style="display:none">
   <div class="ns-cvc-inner">
+    <button type="button" class="ns-cvc-x" id="ns-cvc-x" aria-label="Cerrar">✕</button>
     <div class="ns-cvc-title">🔐 Revisa el código de seguridad</div>
     <p class="ns-cvc-body">
       El <b>código de seguridad (CVV)</b> no coincide con el de tu tarjeta.
@@ -318,7 +319,19 @@
   </div>
 </div>
 <style>
-  #ns-cvc-help { max-width: var(--max); margin: 14px auto 0; padding: 0 16px; }
+  /* Hidden by default. When triggered it becomes a fixed bottom sheet — the buyer is at
+     the bottom of the form (that is where Stripe prints the decline and where the buy
+     button is), so anchoring to the viewport is the only placement that cannot be wrong.
+     ponytail: fixed sheet instead of DOM re-homing — no GHL container to locate, nothing
+     to break if their markup changes. */
+  #ns-cvc-help.ns-cvc-on { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2147483000;
+    padding: 0 10px 10px; animation: nsCvcUp .22s ease-out; }
+  @keyframes nsCvcUp { from { transform: translateY(14px); opacity: 0 } to { transform: none; opacity: 1 } }
+  #ns-cvc-help.ns-cvc-on .ns-cvc-inner { max-width: var(--max); margin: 0 auto;
+    box-shadow: 0 -8px 32px rgba(0,0,0,.55); max-height: 62vh; overflow-y: auto; position: relative; }
+  .ns-cvc-x { position: absolute; top: 6px; right: 8px; width: 26px; height: 26px; border: 0;
+    background: rgba(255,255,255,.08); color: #ffb454; font-size: 15px; line-height: 1;
+    border-radius: 50%; cursor: pointer; }
   .ns-cvc-inner { background: #2a1a08; border: 1px solid #d98324; border-left: 4px solid #d98324;
     border-radius: var(--radius); padding: 14px 16px; }
   .ns-cvc-title { color: #ffb454; font-weight: 800; font-size: 15px; margin-bottom: 6px; }
@@ -340,6 +353,10 @@
   var alt   = document.getElementById('ns-cvc-alt');
   if (!panel) return;
   var hits = 0, lastShown = 0;
+  var x = document.getElementById('ns-cvc-x');
+  if (x) x.addEventListener('click', function () {
+    panel.style.display = 'none'; panel.classList.remove('ns-cvc-on');
+  });
   // Stripe/GHL surface the issuer message in the parent page. Match the CVC wording in
   // both languages rather than a selector, so GHL markup changes cannot break it.
   var CVC = /(codigo de seguridad|código de seguridad|security code|cvc|cvv)/i;
@@ -354,15 +371,9 @@
     // form, but Stripe/GHL print the decline BELOW it, next to the buy button — on a
     // phone the buyer never scrolls back up, so a panel left at the top is invisible.
     // Re-homing it next to the error is what makes this actually get read.
-    try {
-      var host = errNode && errNode.closest ? (errNode.closest('div,section,form') || errNode) : null;
-      if (host && host.parentNode && panel.parentNode !== host.parentNode) {
-        host.parentNode.insertBefore(panel, host.nextSibling);
-      }
-    } catch (e) {}
     panel.style.display = 'block';
-    if (hits >= 2) alt.style.display = 'block';   // 2nd failure → send them to another card
-    try { panel.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    panel.classList.add('ns-cvc-on');             // pin to the viewport bottom
+    if (hits >= 2) alt.style.display = 'block';   // 2nd failure -> send them to another card
   }
   function scan(node) {
     if (!node) return;
