@@ -1,0 +1,180 @@
+<script>
+  // ── INMEDIATO: Restaurar UTMs a la URL antes de que GHL inicialice formularios ──
+  // GHL (medium="order_form") lee la atribucion del query string de la URL en vivo,
+  // no de campos hidden. Por eso reponer los params en la URL es el mecanismo correcto.
+  (function() {
+    try {
+      var qs = new URLSearchParams(window.location.search);
+
+      // La URL manda: si ya trae identificador de anuncio (utm_content o utm_term),
+      // NO tocar nada. Mezclar con storage viejo atribuiria la venta al anuncio anterior.
+      if (qs.get('utm_content') || qs.get('utm_term')) return;
+
+      var cachedUTMs = sessionStorage.getItem('savedUTMParams') || localStorage.getItem('savedUTMParams');
+      if (!cachedUTMs) {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var c = cookies[i].trim();
+          if (c.indexOf('savedUTMParams=') === 0) {
+            cachedUTMs = decodeURIComponent(c.substring('savedUTMParams='.length));
+            break;
+          }
+        }
+      }
+      if (!cachedUTMs) return;
+
+      var saved = new URLSearchParams(cachedUTMs), changed = false;
+      saved.forEach(function(val, key) {
+        if (!qs.get(key)) { qs.set(key, val); changed = true; }
+      });
+      if (!changed) return;
+
+      var newSearch = qs.toString() ? ('?' + qs.toString()) : '';
+      window.history.replaceState(null, '', window.location.pathname + newSearch + window.location.hash);
+    } catch (e) {}
+  })();
+
+  // Variables globales
+    let utmParamsString = "";
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // 1. CAPTURAR PARÁMETROS
+    // Obtener parámetros de la URL actual
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmParams = new URLSearchParams();
+
+    // Capturar todos los parámetros UTM y SRC
+    urlParams.forEach((value, key) => {
+      if (key.startsWith("utm_") || key === "src") {
+        utmParams.set(key, value);
+      }
+    });
+
+    // Convertir a string
+    utmParamsString = utmParams.toString();
+
+    // 2. GUARDAR PARÁMETROS EN MÚLTIPLES LUGARES
+    if (utmParamsString) {
+      // Local Storage (persiste entre sesiones)
+      try {localStorage.setItem('savedUTMParams', utmParamsString); } catch(e) { }
+
+      // Session Storage (persiste en la sesión actual)
+    try {sessionStorage.setItem('savedUTMParams', utmParamsString); } catch(e) { }
+
+      // Cookie (respaldo adicional, 30 días)
+    try {
+        const date = new Date();
+    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+    document.cookie = "savedUTMParams=" + encodeURIComponent(utmParamsString) + "; expires=" + date.toUTCString() + "; path=/";
+      } catch(e) { }
+    }
+
+    // 3. RECUPERAR PARÁMETROS SI NO HAY EN LA URL ACTUAL
+    if (!utmParamsString) {
+      // Intentar recuperar de sessionStorage
+      try {
+        const sessionParams = sessionStorage.getItem('savedUTMParams');
+    if (sessionParams) {
+        utmParamsString = sessionParams;
+        }
+      } catch(e) { }
+
+      // Si aún no hay, intentar recuperar de localStorage
+    if (!utmParamsString) {
+        try {
+          const localParams = localStorage.getItem('savedUTMParams');
+    if (localParams) {
+        utmParamsString = localParams;
+          }
+        } catch(e) { }
+      }
+
+    // Si aún no hay, intentar recuperar de cookie
+    if (!utmParamsString) {
+        try {
+          const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+    if (cookie.startsWith('savedUTMParams=')) {
+        utmParamsString = decodeURIComponent(cookie.substring('savedUTMParams='.length));
+    break;
+            }
+          }
+        } catch(e) { }
+      }
+    }
+
+    // 4. MODIFICAR TODOS LOS ENLACES
+    // Solo proceder si tenemos parámetros UTM
+    if (utmParamsString) {
+      const utmParamsObj = new URLSearchParams(utmParamsString);
+
+    // Aplicar a todos los enlaces existentes
+    applyUTMToAllLinks(utmParamsObj);
+
+    // 5. OBSERVAR CAMBIOS EN EL DOM para enlaces añadidos dinámicamente
+    // Usar MutationObserver para detectar nuevos enlaces añadidos por JavaScript
+    try {
+        let pending = false;
+        const observer = new MutationObserver(function(mutations) {
+        if (pending) return;                    // agrupa rafagas de re-render (checkout embebido)
+    pending = true;
+    requestAnimationFrame(function() { pending = false; applyUTMToAllLinks(utmParamsObj); });
+        });
+
+    observer.observe(document.body, {
+        childList: true,
+    subtree: true
+        });
+      } catch(e) { }
+    }
+  });
+
+    // Función para aplicar UTM a todos los enlaces
+    function applyUTMToAllLinks(utmParamsObj) {
+        document.querySelectorAll("a").forEach(enlace => {
+            try {
+                // Ignorar enlaces sin href o enlaces javascript:
+                if (!enlace.href || enlace.href.trim() === "" ||
+                    enlace.href.startsWith("javascript:") ||
+                    enlace.href.startsWith("mailto:") ||
+                    enlace.href.startsWith("tel:")) return;
+
+                // Crear objeto URL
+                const url = new URL(enlace.href);
+                let destinoParams = new URLSearchParams(url.search);
+
+                // Añadir parámetros UTM sin eliminar los existentes
+                utmParamsObj.forEach((value, key) => {
+                    destinoParams.set(key, value);
+                });
+
+                // Actualizar el enlace
+                url.search = destinoParams.toString();
+                enlace.href = url.toString();
+            } catch (e) { }
+        });
+  }
+
+    // Función para redireccionar con UTM
+    function redirectWithUTM(urlBase) {
+    try {
+      if (!urlBase) return;
+
+    const destino = new URL(urlBase);
+    const destinoParams = new URLSearchParams(destino.search);
+
+    // Usar los parámetros almacenados
+    if (utmParamsString) {
+        new URLSearchParams(utmParamsString).forEach((value, key) => {
+            destinoParams.set(key, value);
+        });
+      }
+
+    destino.search = destinoParams.toString();
+    window.location.href = destino.toString();
+    } catch(e) {
+        window.location.href = urlBase;
+    }
+  }
+</script>
